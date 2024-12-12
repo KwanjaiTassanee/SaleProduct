@@ -11,51 +11,46 @@
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
-      background-color: #f4f4f9;
-    }
-
-    .container {
-      text-align: center;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      width: 100%;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f4f4f4;
     }
 
     h1 {
-      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
     }
 
     form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
       margin-bottom: 20px;
     }
 
-    label {
+    form label {
       display: block;
-      margin: 10px 0 5px;
-      text-align: left;
+      margin-top: 10px;
+      color: #555;
     }
 
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    form input, button {
+      width: calc(100% - 20px);
+      margin-top: 5px;
+      padding: 10px;
+      font-size: 16px;
     }
 
     button {
-      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
       border: none;
       border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      font-size: 16px;
       cursor: pointer;
     }
 
@@ -63,28 +58,33 @@
       background-color: #0056b3;
     }
 
-    .record-history {
+    #history {
       margin-top: 20px;
-      text-align: left;
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
     }
 
     table, th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
     }
 
     th, td {
-      padding: 10px;
-      text-align: left;
+      text-align: center;
+      padding: 8px;
     }
 
     th {
-      background-color: #f4f4f9;
+      background-color: #007BFF;
+      color: white;
     }
   </style>
   <script>
@@ -105,31 +105,35 @@
       // Add data to the array
       data.push(rowData);
 
+      // Display the updated history
+      displayHistory();
+
       // Clear the form
       form.reset();
-
-      // Update record history table
-      updateRecordHistory();
 
       alert("Data added successfully!");
     }
 
-    function updateRecordHistory() {
-      const historyTableBody = document.getElementById('recordHistoryBody');
-      historyTableBody.innerHTML = '';
+    function displayHistory() {
+      const historyTable = document.getElementById("historyTable");
+      historyTable.innerHTML = `
+        <tr>
+          <th>Date</th>
+          <th>Product Name</th>
+          <th>Quantity Sold</th>
+          <th>Price</th>
+        </tr>
+      `;
 
-      data.forEach((row, index) => {
-        const tr = document.createElement('tr');
-
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${row.Date}</td>
-          <td>${row.ProductName}</td>
-          <td>${row.QuantitySold}</td>
-          <td>${row.Price}</td>
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.Date}</td>
+          <td>${item.ProductName}</td>
+          <td>${item.QuantitySold}</td>
+          <td>${item.Price}</td>
         `;
-
-        historyTableBody.appendChild(tr);
+        historyTable.appendChild(row);
       });
     }
 
@@ -152,43 +156,31 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Sales Stock Input</h1>
-    <form id="salesForm" onsubmit="handleFormSubmit(event)">
-      <label for="date">Date:</label>
-      <input type="date" id="date" name="date" required>
+  <h1>Sales Stock Input</h1>
+  <form id="salesForm" onsubmit="handleFormSubmit(event)">
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required><br>
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" required><br>
+    <label for="quantitySold">Quantity Sold:</label>
+    <input type="number" id="quantitySold" name="quantitySold" required><br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required><br><br>
+    <button type="submit">Submit</button>
+  </form>
 
-      <label for="productName">Product Name:</label>
-      <input type="text" id="productName" name="productName" required>
+  <button onclick="downloadExcel()">Download Excel</button>
 
-      <label for="quantitySold">Quantity Sold:</label>
-      <input type="number" id="quantitySold" name="quantitySold" required>
-
-      <label for="price">Price:</label>
-      <input type="number" id="price" name="price" required>
-
-      <button type="submit">Submit</button>
-    </form>
-
-    <button onclick="downloadExcel()">Download Excel</button>
-
-    <div class="record-history">
-      <h2>Record History</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Product Name</th>
-            <th>Quantity Sold</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody id="recordHistoryBody">
-          <!-- Records will appear here -->
-        </tbody>
-      </table>
-    </div>
+  <div id="history">
+    <h2>Record History</h2>
+    <table id="historyTable">
+      <tr>
+        <th>Date</th>
+        <th>Product Name</th>
+        <th>Quantity Sold</th>
+        <th>Price</th>
+      </tr>
+    </table>
   </div>
 </body>
 </html>
