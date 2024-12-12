@@ -7,25 +7,35 @@
   <h1>Sales Stock Input</h1>
   <form action="https://script.google.com/macros/s/AKfycbzhti154WeCgpNyACsUwpeLAjPqfljydd6Fm05J8m_Y7gSEk_IL7vosQl8MctJLBWF1zA/exec" method="post">
     <label for="date">Date:</label>
-    <input type="date" id="date" name="date"><br><br>
+    <input type="date" id="date" name="date" required><br><br>
     <label for="productName">Product Name:</label>
-    <input type="text" id="productName" name="productName"><br><br>
+    <input type="text" id="productName" name="productName" required><br><br>
     <label for="quantitySold">Quantity Sold:</label>
-    <input type="number" id="quantitySold" name="quantitySold"><br><br>
+    <input type="number" id="quantitySold" name="quantitySold" required><br><br>
     <label for="price">Price:</label>
-    <input type="number" id="price" name="price"><br><br>
+    <input type="number" id="price" name="price" required><br><br>
     <input type="submit" value="Submit">
   </form>
 
-  <button onclick="generateReport()">Generate Sales Report</button>
+  <button id="reportButton">Generate Sales Report</button>
 
   <script>
-    function generateReport() {
-      // Trigger the Google Apps Script function to generate the report
-      google.script.run.withSuccessHandler(function(result) {
-        // Handle the report generation result, e.g., display a message or download link
-      }).generateSalesReport();
-    }
+    document.getElementById('reportButton').addEventListener('click', function() {
+      fetch('https://script.google.com/macros/s/AKfycbzhti154WeCgpNyACsUwpeLAjPqfljydd6Fm05J8m_Y7gSEk_IL7vosQl8MctJLBWF1zA/exec')
+        .then(response => response.text())
+        .then(data => {
+          // Display or download the report (CSV format)
+          const blob = new Blob([data], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'SalesReport.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        })
+        .catch(error => alert('Error generating report: ' + error));
+    });
   </script>
 </body>
 </html>
