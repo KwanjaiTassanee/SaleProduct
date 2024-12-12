@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sales Stock Input</title>
+</head>
+<body>
+  <h1>Sales Stock Input</h1>
+  <form action="https://script.google.com/macros/s/1EJ_yMgI3ULX4imU6VGmYaqtpA2XeFWk5wF-bixvikyzcQQlXn0l2kVOQ/exec" method="post">
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date"><br><br>
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName"><br><br>
+    <label for="quantitySold">Quantity Sold:</label>
+    <input type="number" id="quantitySold" name="quantitySold"><br><br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <button onclick="generateReport()">Generate Sales Report</button>
+
+  <script>
+    function generateReport() {
+      // Trigger the Google Apps Script function to generate the report
+      google.script.run.withSuccessHandler(function(result) {
+        // Handle the report generation result, e.g., display a message or download link
+      }).generateSalesReport();
+    }
+  </script>
+</body>
+</html>
